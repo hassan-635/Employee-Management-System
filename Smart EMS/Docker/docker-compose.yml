@@ -1,0 +1,51 @@
+# ==============================================================
+#  docker-compose.yml — SmartEPS Orchestration
+#  Usage: docker-compose up --build
+# ==============================================================
+version: "3.9"
+
+services:
+  smarteps:
+    build:
+      context: ..
+      dockerfile: Docker/Dockerfile
+    image: smarteps:latest
+    container_name: smarteps-app
+
+    # Windows containers require process isolation
+    isolation: process
+
+    # Volume mount so the ML model persists between runs
+    volumes:
+      - ./models:/app/models
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Environment variables
+    environment:
+      - MODEL_PATH=models/performance_model.zip
+      - DOTNET_ENVIRONMENT=Production
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 1G
+        reservations:
+          memory: 512M
+
+    # Health check — verify process is alive
+    healthcheck:
+      test: ["CMD", "tasklist", "/FI", "IMAGENAME eq SmartEPS.exe"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
