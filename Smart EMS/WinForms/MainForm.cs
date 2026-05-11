@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using SmartEPS.ML;
+using static SmartEPS.WinForms.UiTheme;
 
 namespace SmartEPS.WinForms
 {
@@ -50,7 +51,7 @@ namespace SmartEPS.WinForms
         private void TryAutoTrain()
         {
             lblStatus.Text = "🔄 Training ML model, please wait...";
-            lblStatus.ForeColor = Color.FromArgb(255, 193, 7);
+            lblStatus.ForeColor = StatusBusy;
 
             var worker = new System.ComponentModel.BackgroundWorker();
             worker.DoWork += (s, e) =>
@@ -63,7 +64,7 @@ namespace SmartEPS.WinForms
                 _modelReady = true;
                 double acc = (double)(e.Result ?? 0.0);
                 lblStatus.Text = $"✅ ML Model Ready  |  Accuracy: {acc * 100:F1}%";
-                lblStatus.ForeColor = Color.FromArgb(40, 200, 120);
+                lblStatus.ForeColor = StatusOk;
                 btnPredict.Enabled = true;
                 btnAddEmployee.Enabled = true;
             };
@@ -78,8 +79,8 @@ namespace SmartEPS.WinForms
             this.Text            = "Smart Employee Performance Evaluation System";
             this.Size            = new Size(1050, 760);
             this.MinimumSize     = new Size(1000, 720);
-            this.BackColor       = Color.FromArgb(15, 15, 30);
-            this.Font            = new Font("Segoe UI", 9f);
+            this.BackColor       = FormBack;
+            this.Font            = FontBody;
             this.StartPosition   = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox     = false;
@@ -88,42 +89,57 @@ namespace SmartEPS.WinForms
             pnlHeader = new Panel
             {
                 Dock      = DockStyle.Top,
-                Height    = 80,
-                BackColor = Color.FromArgb(10, 10, 22)
+                Height    = 84,
+                BackColor = HeaderBg
+            };
+            pnlHeader.Paint += (_, e) =>
+            {
+                using var line = new Pen(Color.FromArgb(218, 198, 168), 1);
+                e.Graphics.DrawLine(line, 0, pnlHeader.Height - 1, pnlHeader.Width, pnlHeader.Height - 1);
             };
             this.Controls.Add(pnlHeader);
 
             lblTitle = new Label
             {
-                Text      = "⚡ Smart Employee Performance System",
-                Font      = new Font("Segoe UI", 18f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(0, 212, 255),
+                Text      = "Smart Employee Performance",
+                Font      = FontTitle,
+                ForeColor = TextPrimary,
                 AutoSize  = true,
-                Location  = new Point(20, 18)
+                Location  = new Point(26, 16)
             };
             pnlHeader.Controls.Add(lblTitle);
+
+            var lblSubtitle = new Label
+            {
+                Text      = "Evaluation Suite",
+                Font      = new Font("Segoe UI", 9f, FontStyle.Italic),
+                ForeColor = AccentGold,
+                AutoSize  = true,
+                Location  = new Point(28, 46)
+            };
+            pnlHeader.Controls.Add(lblSubtitle);
 
             lblStatus = new Label
             {
                 Text      = "⏳ Initialising...",
-                Font      = new Font("Segoe UI", 9f),
-                ForeColor = Color.Gray,
+                Font      = FontBody,
+                ForeColor = TextMuted,
                 AutoSize  = true,
-                Location  = new Point(22, 56)
+                Location  = new Point(420, 36)
             };
             pnlHeader.Controls.Add(lblStatus);
 
             // ── Left panel (Employee Info) ────────────────────
             pnlLeft = new Panel
             {
-                Location  = new Point(15, 90),
-                Size      = new Size(310, 620),
-                BackColor = Color.FromArgb(20, 20, 40)
+                Location  = new Point(15, 96),
+                Size      = new Size(310, 614),
+                BackColor = CardSurface
             };
-            RoundCorners(pnlLeft);
+            StyleCardPanel(pnlLeft);
             this.Controls.Add(pnlLeft);
 
-            AddSectionHeader(pnlLeft, "👤 Employee Information", 12);
+            AddSectionHeader(pnlLeft, "Employee information", 12);
 
             lblName  = MakeLabel(pnlLeft, "Full Name",    45);
             txtName  = MakeTextBox(pnlLeft, 68, "e.g. Alice Johnson");
@@ -132,7 +148,7 @@ namespace SmartEPS.WinForms
             lblEmpId = MakeLabel(pnlLeft, "Employee ID", 155);
             txtEmpId = MakeTextBox(pnlLeft, 177, "e.g. EMP-001");
 
-            AddSectionHeader(pnlLeft, "📊 KPI Metrics", 215);
+            AddSectionHeader(pnlLeft, "KPI metrics", 215);
 
             lblTask       = MakeLabel(pnlLeft, "Task Completion Rate (%)", 248);
             txtTask       = MakeTextBox(pnlLeft, 268, "0–100");
@@ -150,14 +166,14 @@ namespace SmartEPS.WinForms
             // ── Right panel (More KPIs + Action Buttons) ──────
             pnlRight = new Panel
             {
-                Location  = new Point(340, 90),
-                Size      = new Size(310, 620),
-                BackColor = Color.FromArgb(20, 20, 40)
+                Location  = new Point(340, 96),
+                Size      = new Size(310, 614),
+                BackColor = CardSurface
             };
-            RoundCorners(pnlRight);
+            StyleCardPanel(pnlRight);
             this.Controls.Add(pnlRight);
 
-            AddSectionHeader(pnlRight, "📈 Additional KPIs", 12);
+            AddSectionHeader(pnlRight, "Additional KPIs", 12);
 
             lblCollab  = MakeLabel(pnlRight, "Team Collaboration (0–10)", 45);
             txtCollab  = MakeTextBox(pnlRight, 65, "0.0–10.0");
@@ -165,39 +181,39 @@ namespace SmartEPS.WinForms
             txtOvertime= MakeTextBox(pnlRight, 117, "e.g. 15");
 
             // Buttons — Part 3 requires at least 2
-            btnPredict = MakeButton(pnlRight, "🤖 Predict Performance",
-                                    Color.FromArgb(0, 120, 215), 165);
+            btnPredict = MakeButton(pnlRight, "Predict performance",
+                                    Color.FromArgb(48, 58, 78), 165);
             btnPredict.Enabled = false;
 
-            btnAddEmployee = MakeButton(pnlRight, "➕ Add Employee",
-                                         Color.FromArgb(0, 153, 76), 215);
+            btnAddEmployee = MakeButton(pnlRight, "Add employee",
+                                         Color.FromArgb(70, 110, 90), 215);
             btnAddEmployee.Enabled = false;
 
-            btnViewAll = MakeButton(pnlRight, "📋 View All Employees",
-                                     Color.FromArgb(100, 60, 180), 265);
+            btnViewAll = MakeButton(pnlRight, "View all employees",
+                                     Color.FromArgb(100, 82, 118), 265);
 
-            btnClear = MakeButton(pnlRight, "🗑️  Clear Form",
-                                   Color.FromArgb(160, 40, 40), 315);
+            btnClear = MakeButton(pnlRight, "Clear form",
+                                   Color.FromArgb(158, 108, 98), 315);
 
-            btnTrainModel = MakeButton(pnlRight, "🔁 Re-Train Model",
-                                        Color.FromArgb(60, 100, 140), 365);
+            btnTrainModel = MakeButton(pnlRight, "Re-train model",
+                                        Color.FromArgb(88, 102, 118), 365);
 
             // Quick-fill demo data
-            var btnDemo = MakeButton(pnlRight, "💡 Load Demo Data",
-                                      Color.FromArgb(80, 80, 100), 415);
+            var btnDemo = MakeButton(pnlRight, "Load demo data",
+                                      Color.FromArgb(138, 128, 112), 415);
             btnDemo.Click += BtnDemo_Click;
 
             // ── Result panel ──────────────────────────────────
             pnlResult = new Panel
             {
-                Location  = new Point(665, 90),
-                Size      = new Size(360, 620),
-                BackColor = Color.FromArgb(20, 20, 40)
+                Location  = new Point(665, 96),
+                Size      = new Size(360, 614),
+                BackColor = CardSurface
             };
-            RoundCorners(pnlResult);
+            StyleCardPanel(pnlResult);
             this.Controls.Add(pnlResult);
 
-            AddSectionHeader(pnlResult, "🎯 Prediction Result", 12);
+            AddSectionHeader(pnlResult, "Prediction result", 12);
 
             pbRatingIcon = new PictureBox
             {
@@ -212,7 +228,7 @@ namespace SmartEPS.WinForms
             {
                 Text      = "Run a prediction to see results",
                 Font      = new Font("Segoe UI", 13f, FontStyle.Bold),
-                ForeColor = Color.Gray,
+                ForeColor = TextSubtle,
                 Size      = new Size(320, 50),
                 Location  = new Point(20, 175),
                 TextAlign = ContentAlignment.MiddleCenter
@@ -222,8 +238,8 @@ namespace SmartEPS.WinForms
             var lblConfLbl = new Label
             {
                 Text      = "Confidence",
-                Font      = new Font("Segoe UI", 9f),
-                ForeColor = Color.Gray,
+                Font      = FontBodySmall,
+                ForeColor = TextMuted,
                 AutoSize  = true,
                 Location  = new Point(20, 240)
             };
@@ -236,7 +252,9 @@ namespace SmartEPS.WinForms
                 Minimum  = 0,
                 Maximum  = 100,
                 Value    = 0,
-                Style    = ProgressBarStyle.Continuous
+                Style    = ProgressBarStyle.Continuous,
+                BackColor = InputFill,
+                ForeColor = AccentGold
             };
             pnlResult.Controls.Add(pgConfidence);
 
@@ -244,7 +262,7 @@ namespace SmartEPS.WinForms
             {
                 Text      = "0%",
                 Font      = new Font("Segoe UI", 10f, FontStyle.Bold),
-                ForeColor = Color.White,
+                ForeColor = TextPrimary,
                 AutoSize  = true,
                 Location  = new Point(20, 292)
             };
@@ -255,8 +273,8 @@ namespace SmartEPS.WinForms
             {
                 Name      = "lblBreakdown",
                 Text      = "",
-                Font      = new Font("Segoe UI", 9f),
-                ForeColor = Color.FromArgb(160, 160, 200),
+                Font      = FontBody,
+                ForeColor = TextMuted,
                 Size      = new Size(320, 280),
                 Location  = new Point(20, 325),
                 TextAlign = ContentAlignment.TopLeft
@@ -345,7 +363,7 @@ namespace SmartEPS.WinForms
                 if (c is TextBox tb) tb.Clear();
 
             lblResult.Text      = "Run a prediction to see results";
-            lblResult.ForeColor = Color.Gray;
+            lblResult.ForeColor = TextSubtle;
             pgConfidence.Value  = 0;
             lblConfidence.Text  = "0%";
             pbRatingIcon.Invalidate();
@@ -358,7 +376,7 @@ namespace SmartEPS.WinForms
             btnPredict.Enabled = false;
             btnAddEmployee.Enabled = false;
             lblStatus.Text = "🔄 Re-training model...";
-            lblStatus.ForeColor = Color.FromArgb(255, 193, 7);
+            lblStatus.ForeColor = StatusBusy;
             TryAutoTrain();
         }
 
@@ -383,8 +401,8 @@ namespace SmartEPS.WinForms
             if (sender is TextBox tb)
             {
                 tb.BackColor = float.TryParse(tb.Text, out _)
-                    ? Color.FromArgb(25, 35, 55)
-                    : Color.FromArgb(60, 20, 20);
+                    ? InputOk
+                    : InputError;
             }
         }
 
@@ -399,10 +417,10 @@ namespace SmartEPS.WinForms
 
             Color catColor = pred.PredictedCategory switch
             {
-                3 => Color.FromArgb(0, 230, 120),
-                2 => Color.FromArgb(60, 180, 255),
-                1 => Color.FromArgb(255, 180, 0),
-                _ => Color.FromArgb(255, 80, 80)
+                3 => Color.FromArgb(72, 128, 95),
+                2 => Color.FromArgb(72, 118, 158),
+                1 => Color.FromArgb(176, 132, 62),
+                _ => Color.FromArgb(178, 92, 92)
             };
 
             lblResult.Text      = pred.CategoryName;
@@ -446,11 +464,11 @@ namespace SmartEPS.WinForms
 
             Color fill = _currentCategory switch
             {
-                "3" => Color.FromArgb(0, 180, 100),
-                "2" => Color.FromArgb(0, 140, 220),
-                "1" => Color.FromArgb(200, 150, 0),
-                "0" => Color.FromArgb(200, 50, 50),
-                _   => Color.FromArgb(60, 60, 80)
+                "3" => Color.FromArgb(88, 142, 108),
+                "2" => Color.FromArgb(88, 128, 168),
+                "1" => Color.FromArgb(188, 148, 78),
+                "0" => Color.FromArgb(188, 98, 98),
+                _   => Color.FromArgb(150, 145, 138)
             };
 
             using var brush = new SolidBrush(fill);
@@ -466,8 +484,9 @@ namespace SmartEPS.WinForms
                 Alignment     = StringAlignment.Center,
                 LineAlignment = StringAlignment.Center
             };
-            g.DrawString(icon, font, Brushes.White,
-                new RectangleF(rect.X, rect.Y, rect.Width, rect.Height), sf);
+            using (var ivory = new SolidBrush(Color.FromArgb(255, 252, 248)))
+                g.DrawString(icon, font, ivory,
+                    new RectangleF(rect.X, rect.Y, rect.Width, rect.Height), sf);
         }
 
         // ─────────────────────────────────────────────────────
@@ -498,10 +517,11 @@ namespace SmartEPS.WinForms
             if (!float.TryParse(tb.Text.Trim(), out float v) || v < min || v > max)
             {
                 err = $"{name} must be {min}–{max}.";
-                tb.BackColor = Color.FromArgb(80, 20, 20);
+                tb.BackColor = InputError;
                 return false;
             }
             assign(v);
+            tb.BackColor = InputOk;
             return true;
         }
 
@@ -522,10 +542,10 @@ namespace SmartEPS.WinForms
             var lbl = new Label
             {
                 Text      = text,
-                Font      = new Font("Segoe UI", 8.5f),
-                ForeColor = Color.FromArgb(150, 160, 180),
+                Font      = FontBodySmall,
+                ForeColor = TextMuted,
                 AutoSize  = true,
-                Location  = new Point(12, y)
+                Location  = new Point(16, y)
             };
             p.Controls.Add(lbl);
             return lbl;
@@ -535,10 +555,10 @@ namespace SmartEPS.WinForms
         {
             var tb = new TextBox
             {
-                Location    = new Point(12, y),
-                Size        = new Size(284, 24),
-                BackColor   = Color.FromArgb(25, 35, 55),
-                ForeColor   = Color.White,
+                Location    = new Point(16, y),
+                Size        = new Size(276, 26),
+                BackColor   = InputFill,
+                ForeColor   = TextPrimary,
                 BorderStyle = BorderStyle.FixedSingle,
                 Font        = new Font("Segoe UI", 9.5f),
                 PlaceholderText = placeholder
@@ -552,15 +572,17 @@ namespace SmartEPS.WinForms
             var btn = new Button
             {
                 Text      = text,
-                Location  = new Point(12, y),
-                Size      = new Size(284, 38),
+                Location  = new Point(16, y),
+                Size      = new Size(276, 40),
                 BackColor = color,
-                ForeColor = Color.White,
+                ForeColor = Color.FromArgb(252, 250, 247),
                 FlatStyle = FlatStyle.Flat,
-                Font      = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+                Font      = FontButton,
                 Cursor    = Cursors.Hand
             };
             btn.FlatAppearance.BorderSize = 0;
+            btn.FlatAppearance.MouseOverBackColor = ControlPaint.Light(color, 0.12f);
+            btn.FlatAppearance.MouseDownBackColor = ControlPaint.Dark(color, 0.08f);
             p.Controls.Add(btn);
             return btn;
         }
@@ -570,23 +592,12 @@ namespace SmartEPS.WinForms
             var lbl = new Label
             {
                 Text      = text,
-                Font      = new Font("Segoe UI", 10f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(0, 212, 255),
+                Font      = FontSection,
+                ForeColor = AccentGold,
                 AutoSize  = true,
-                Location  = new Point(12, y)
+                Location  = new Point(16, y)
             };
             p.Controls.Add(lbl);
-        }
-
-        private static void RoundCorners(Panel p)
-        {
-            // Visual refinement via region clipping
-            p.Paint += (s, e) =>
-            {
-                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                using var pen = new Pen(Color.FromArgb(40, 60, 100), 1);
-                e.Graphics.DrawRectangle(pen, 0, 0, p.Width - 1, p.Height - 1);
-            };
         }
 
         // Required for partial class designer compatibility
