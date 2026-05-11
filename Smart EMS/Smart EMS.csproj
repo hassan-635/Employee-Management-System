@@ -3,10 +3,19 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
-    <RootNamespace>Smart_EMS</RootNamespace>
     <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>SmartEPS</AssemblyName>
+    <RootNamespace>SmartEPS</RootNamespace>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <!--  ML.NET packages  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML"                        Version="3.0.1" />
+    <PackageReference Include="Microsoft.ML.FastTree"               Version="3.0.1" />
+  </ItemGroup>
 
 </Project>
