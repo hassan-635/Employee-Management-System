@@ -475,18 +475,19 @@ namespace SmartEPS.WinForms
         // ─────────────────────────────────────────────────────
         private bool TryGetInput(out EmployeeData data, out string err)
         {
-            data = new EmployeeData();
-            err  = "";
+            var d = new EmployeeData();
+            err = "";
 
             bool ok = true;
-            ok &= ParseFloat(txtTask,       0, 100,  v => data.TaskCompletionRate     = v, "Task Completion", ref err);
-            ok &= ParseFloat(txtQuality,    0, 10,   v => data.QualityScore           = v, "Quality Score",   ref err);
-            ok &= ParseFloat(txtAttendance, 0, 100,  v => data.AttendanceRate         = v, "Attendance Rate", ref err);
-            ok &= ParseFloat(txtTraining,   0, 5000, v => data.TrainingHours          = v, "Training Hours",  ref err);
-            ok &= ParseFloat(txtProjects,   0, 1000, v => data.ProjectsCompleted      = v, "Projects",        ref err);
-            ok &= ParseFloat(txtCsat,       0, 10,   v => data.CustomerSatisfaction   = v, "CSAT",            ref err);
-            ok &= ParseFloat(txtCollab,     0, 10,   v => data.TeamCollaborationScore = v, "Collaboration",   ref err);
-            ok &= ParseFloat(txtOvertime,   0, 744,  v => data.OvertimeHours          = v, "Overtime",        ref err);
+            ok &= ParseFloat(txtTask,       0, 100,  v => d.TaskCompletionRate     = v, "Task Completion", ref err);
+            ok &= ParseFloat(txtQuality,    0, 10,   v => d.QualityScore           = v, "Quality Score",   ref err);
+            ok &= ParseFloat(txtAttendance, 0, 100,  v => d.AttendanceRate         = v, "Attendance Rate", ref err);
+            ok &= ParseFloat(txtTraining,   0, 5000, v => d.TrainingHours          = v, "Training Hours",  ref err);
+            ok &= ParseFloat(txtProjects,   0, 1000, v => d.ProjectsCompleted      = v, "Projects",        ref err);
+            ok &= ParseFloat(txtCsat,       0, 10,   v => d.CustomerSatisfaction   = v, "CSAT",            ref err);
+            ok &= ParseFloat(txtCollab,     0, 10,   v => d.TeamCollaborationScore = v, "Collaboration",   ref err);
+            ok &= ParseFloat(txtOvertime,   0, 744,  v => d.OvertimeHours          = v, "Overtime",        ref err);
+            data = d;
             return ok;
         }
 
