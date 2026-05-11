@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using SmartEPS.ML;
+using static SmartEPS.WinForms.UiTheme;
 
 namespace SmartEPS.WinForms
 {
@@ -46,7 +47,8 @@ namespace SmartEPS.WinForms
         {
             this.Text            = "All Employees — Performance Summary";
             this.Size            = new Size(1100, 650);
-            this.BackColor       = Color.FromArgb(15, 15, 30);
+            this.BackColor       = FormBack;
+            this.Font            = FontBody;
             this.StartPosition   = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox     = false;
@@ -55,38 +57,43 @@ namespace SmartEPS.WinForms
             pnlTop = new Panel
             {
                 Dock      = DockStyle.Top,
-                Height    = 65,
-                BackColor = Color.FromArgb(10, 10, 22)
+                Height    = 72,
+                BackColor = HeaderBg
+            };
+            pnlTop.Paint += (_, e) =>
+            {
+                using var line = new Pen(Color.FromArgb(218, 198, 168), 1);
+                e.Graphics.DrawLine(line, 0, pnlTop.Height - 1, pnlTop.Width, pnlTop.Height - 1);
             };
             this.Controls.Add(pnlTop);
 
             lblTitle = new Label
             {
-                Text      = "📋 Employee Performance Registry",
-                Font      = new Font("Segoe UI", 16f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(0, 212, 255),
+                Text      = "Employee performance registry",
+                Font      = new Font("Cambria", 18f, FontStyle.Regular),
+                ForeColor = TextPrimary,
                 AutoSize  = true,
-                Location  = new Point(15, 10)
+                Location  = new Point(22, 12)
             };
             pnlTop.Controls.Add(lblTitle);
 
             lblCount = new Label
             {
-                Text      = $"Total Records: {_employees.Count}",
-                Font      = new Font("Segoe UI", 9f),
-                ForeColor = Color.Silver,
+                Text      = $"Total records: {_employees.Count}",
+                Font      = FontBodySmall,
+                ForeColor = TextMuted,
                 AutoSize  = true,
-                Location  = new Point(17, 42)
+                Location  = new Point(24, 44)
             };
             pnlTop.Controls.Add(lblCount);
 
             // DataGridView
             dgv = new DataGridView
             {
-                Location               = new Point(10, 75),
-                Size                   = new Size(1065, 490),
-                BackgroundColor        = Color.FromArgb(18, 18, 35),
-                GridColor              = Color.FromArgb(40, 50, 70),
+                Location               = new Point(14, 82),
+                Size                   = new Size(1060, 488),
+                BackgroundColor        = CardSurface,
+                GridColor              = CardBorder,
                 BorderStyle            = BorderStyle.None,
                 RowHeadersVisible      = false,
                 AllowUserToAddRows     = false,
@@ -94,29 +101,29 @@ namespace SmartEPS.WinForms
                 ReadOnly               = true,
                 SelectionMode          = DataGridViewSelectionMode.FullRowSelect,
                 AutoSizeColumnsMode    = DataGridViewAutoSizeColumnsMode.Fill,
-                Font                   = new Font("Segoe UI", 9f),
+                Font                   = FontBody,
                 CellBorderStyle        = DataGridViewCellBorderStyle.SingleHorizontal,
                 EnableHeadersVisualStyles = false
             };
 
             dgv.DefaultCellStyle = new DataGridViewCellStyle
             {
-                BackColor     = Color.FromArgb(22, 22, 42),
-                ForeColor     = Color.FromArgb(200, 210, 230),
-                SelectionBackColor = Color.FromArgb(0, 80, 150),
-                SelectionForeColor = Color.White,
-                Padding       = new Padding(4)
+                BackColor          = CardSurface,
+                ForeColor          = TextPrimary,
+                SelectionBackColor = Color.FromArgb(232, 224, 208),
+                SelectionForeColor = TextPrimary,
+                Padding            = new Padding(6, 4, 6, 4)
             };
             dgv.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
             {
-                BackColor = Color.FromArgb(0, 30, 60),
-                ForeColor = Color.FromArgb(0, 212, 255),
+                BackColor = Color.FromArgb(232, 224, 210),
+                ForeColor = TextPrimary,
                 Font      = new Font("Segoe UI", 9f, FontStyle.Bold),
-                Padding   = new Padding(4)
+                Padding   = new Padding(6, 6, 6, 6)
             };
             dgv.AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
             {
-                BackColor = Color.FromArgb(26, 26, 48)
+                BackColor = Color.FromArgb(252, 250, 246)
             };
 
             // Row color by rating
@@ -128,38 +135,45 @@ namespace SmartEPS.WinForms
             pnlBot = new Panel
             {
                 Dock      = DockStyle.Bottom,
-                Height    = 55,
-                BackColor = Color.FromArgb(10, 10, 22)
+                Height    = 58,
+                BackColor = HeaderBg
+            };
+            pnlBot.Paint += (_, e) =>
+            {
+                using var line = new Pen(Color.FromArgb(218, 198, 168), 1);
+                e.Graphics.DrawLine(line, 0, 0, pnlBot.Width, 0);
             };
             this.Controls.Add(pnlBot);
 
             btnExport = new Button
             {
-                Text      = "📥 Export CSV",
-                Location  = new Point(15, 12),
-                Size      = new Size(140, 32),
-                BackColor = Color.FromArgb(0, 100, 60),
-                ForeColor = Color.White,
+                Text      = "Export CSV",
+                Location  = new Point(18, 14),
+                Size      = new Size(150, 34),
+                BackColor = Color.FromArgb(70, 110, 90),
+                ForeColor = Color.FromArgb(252, 250, 247),
                 FlatStyle = FlatStyle.Flat,
-                Font      = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+                Font      = FontButton,
                 Cursor    = Cursors.Hand
             };
             btnExport.FlatAppearance.BorderSize = 0;
+            btnExport.FlatAppearance.MouseOverBackColor = ControlPaint.Light(btnExport.BackColor, 0.12f);
             btnExport.Click += BtnExport_Click;
             pnlBot.Controls.Add(btnExport);
 
             btnClose = new Button
             {
-                Text      = "✖ Close",
-                Location  = new Point(940, 12),
-                Size      = new Size(120, 32),
-                BackColor = Color.FromArgb(140, 30, 30),
-                ForeColor = Color.White,
+                Text      = "Close",
+                Location  = new Point(928, 14),
+                Size      = new Size(130, 34),
+                BackColor = Color.FromArgb(48, 58, 78),
+                ForeColor = Color.FromArgb(252, 250, 247),
                 FlatStyle = FlatStyle.Flat,
-                Font      = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+                Font      = FontButton,
                 Cursor    = Cursors.Hand
             };
             btnClose.FlatAppearance.BorderSize = 0;
+            btnClose.FlatAppearance.MouseOverBackColor = ControlPaint.Light(btnClose.BackColor, 0.12f);
             btnClose.Click += (s, e) => this.Close();
             pnlBot.Controls.Add(btnClose);
         }
@@ -211,11 +225,11 @@ namespace SmartEPS.WinForms
             if (ratingCell?.Value == null) return;
             string rating = ratingCell.Value.ToString() ?? "";
 
-            Color rowColor = rating.Contains("Excellent") ? Color.FromArgb(0, 60, 30)
-                           : rating.Contains("Good")      ? Color.FromArgb(0, 40, 80)
-                           : rating.Contains("Average")   ? Color.FromArgb(60, 50, 0)
-                           : rating.Contains("Poor")      ? Color.FromArgb(70, 10, 10)
-                           : Color.FromArgb(22, 22, 42);
+            Color rowColor = rating.Contains("Excellent") ? Color.FromArgb(232, 244, 236)
+                           : rating.Contains("Good")      ? Color.FromArgb(228, 236, 244)
+                           : rating.Contains("Average")   ? Color.FromArgb(244, 238, 226)
+                           : rating.Contains("Poor")      ? Color.FromArgb(250, 228, 228)
+                           : CardSurface;
 
             if (e.CellStyle != null)
                 e.CellStyle.BackColor = rowColor;
