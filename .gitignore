@@ -1,0 +1,53 @@
+# ============================================================
+#  SmartEPS — .gitignore
+#  C# / .NET 8 + WinForms + ML.NET + Docker
+# ============================================================
+
+# ── Build Output ─────────────────────────────────────────────
+Smart EMS/bin/
+Smart EMS/obj/
+Smart EMS/out/
+Smart EMS/publish/
+
+# ── Visual Studio ────────────────────────────────────────────
+Smart EMS/.vs/
+Smart EMS/*.user
+Smart EMS/*.suo
+Smart EMS/*.userosscache
+Smart EMS/*.sln.docstates
+Smart EMS/*.rsuser
+Smart EMS/.vscode/
+
+# ── ML.NET Trained Model ─────────────────────────────────────
+Smart EMS/*.zip
+Smart EMS/models/
+Smart EMS/performance_model.zip
+
+# ── NuGet ────────────────────────────────────────────────────
+Smart EMS/packages/
+Smart EMS/*.nupkg
+Smart EMS/project.lock.json
+Smart EMS/project.assets.json
+Smart EMS/**/packages/*
+!Smart EMS/**/packages/build/
+
+# ── OS Files ─────────────────────────────────────────────────
+Smart EMS/.DS_Store
+Smart EMS/Thumbs.db
+Smart EMS/desktop.ini
+
+# ── Docker ───────────────────────────────────────────────────
+Smart EMS/docker-compose.override.yml
+Smart EMS/.dockerignore
+
+# ── Logs & Temp ──────────────────────────────────────────────
+Smart EMS/*.log
+Smart EMS/*.tmp
+Smart EMS/*.temp
+Smart EMS/logs/
+
+# ── Test Results ─────────────────────────────────────────────
+Smart EMS/TestResults/
+Smart EMS/coverage/
+Smart EMS/*.trx
+Smart EMS/*.coveragexml
