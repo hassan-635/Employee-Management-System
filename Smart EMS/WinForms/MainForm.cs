@@ -20,22 +20,22 @@ namespace SmartEPS.WinForms
         private bool _modelReady = false;
 
         // ── UI Controls ──────────────────────────────────────
-        // Labels + TextBoxes for KPI input
-        private Label   lblTitle, lblStatus, lblResult, lblConfidence;
-        private Label   lblName, lblDept, lblEmpId;
-        private Label   lblTask, lblQuality, lblAttendance;
-        private Label   lblTraining, lblProjects, lblCsat, lblCollab, lblOvertime;
-        private TextBox txtName, txtDept, txtEmpId;
-        private TextBox txtTask, txtQuality, txtAttendance;
-        private TextBox txtTraining, txtProjects, txtCsat, txtCollab, txtOvertime;
+        // Labels + TextBoxes for KPI input (assigned in BuildUI; null! satisfies nullable analysis)
+        private Label   lblTitle = null!, lblStatus = null!, lblResult = null!, lblConfidence = null!;
+        private Label   lblName = null!, lblDept = null!, lblEmpId = null!;
+        private Label   lblTask = null!, lblQuality = null!, lblAttendance = null!;
+        private Label   lblTraining = null!, lblProjects = null!, lblCsat = null!, lblCollab = null!, lblOvertime = null!;
+        private TextBox txtName = null!, txtDept = null!, txtEmpId = null!;
+        private TextBox txtTask = null!, txtQuality = null!, txtAttendance = null!;
+        private TextBox txtTraining = null!, txtProjects = null!, txtCsat = null!, txtCollab = null!, txtOvertime = null!;
 
         // Buttons (2+ required)
-        private Button btnPredict, btnAddEmployee, btnViewAll, btnClear, btnTrainModel;
+        private Button btnPredict = null!, btnAddEmployee = null!, btnViewAll = null!, btnClear = null!, btnTrainModel = null!;
 
         // Result panel
-        private Panel   pnlResult, pnlHeader, pnlLeft, pnlRight;
-        private ProgressBar pgConfidence;
-        private PictureBox  pbRatingIcon;
+        private Panel   pnlResult = null!, pnlHeader = null!, pnlLeft = null!, pnlRight = null!;
+        private ProgressBar pgConfidence = null!;
+        private PictureBox  pbRatingIcon = null!;
 
         public MainForm()
         {
